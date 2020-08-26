@@ -1,0 +1,36 @@
+<div class="main">
+    <div class="number1">
+        <h1>Greetings App</h1>
+    </div>
+    <form action="/greetings" method="POST">
+
+        <div class="number2">
+
+            <input type="text" name="nameInput" id="inputElements" placeholder="Enter your name"
+                value="{{textBoxValue.nameInput}}">
+
+
+
+            <h1 id="counter"></h1>
+            <button id="greetButton" type="submit">greet</button>
+            <div class="number3">
+                <label>
+                    <input type="radio" name="selector" value="english">English
+                </label>
+                <label>
+                    <input type="radio" name="selector" value="French">French
+                </label>
+                <label>
+                    <input type="radio" name="selector" value="Spanish">Spanish
+                </label>
+            </div>
+        </div>
+        <div class="number4">
+
+            <h1 id="txtBox"></h1>
+
+            <button id="resetButton">reset</button>
+
+        </div>
+    </form>
+</div>

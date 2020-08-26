@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
+@media(min-width:800px) {
+    body {
+        /* background-image: url(https://1stwebdesigner.com/wp-content/uploads/2019/07/css-background-effects-thumb.jpg); */
+        background-color: #727272;
+        font-family: 'Rock Salt', cursive;
+        /* color: antiquewhite; */
+    }
+    .clearfix {
+        overflow: auto;
+        zoom: 1;
+    }
+    .container {
+        text-align: center;
+        padding: 1em;
+    }
+    .header {
+        text-align: center;
+        padding: 2em;
+        border: 2em;
+    }
+    .main {
+        text-align: center;
+    }
+    .number1 {
+        text-align: center;
+        padding: 1em;
+        border: 1em;
+    }
+    button {
+        border-radius: 1em;
+        top: 0;
+        left: 0;
+        height: 40px;
+        width: 50px;
+    }
+    input {
+        border-radius: 2em;
+        background: white;
+        
+    }
+    .inputElements{
+        height: 100px;
+        width: 100px;
+    }
+    .number2 {
+        border: 1em;
+        text-align: center;
+    }
+    .number3 {
+        text-align: center;
+        padding: 1em;
+        border: 1em;
+    }
+    .number4 {
+        text-align: center;
+        padding-bottom: 1em;
+    }
+}
