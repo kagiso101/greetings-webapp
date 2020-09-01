@@ -24,18 +24,24 @@ app.use(bodyParser.json())
 //Routes
 
 app.get('/', function (req, res) {
-    res.render('home', {
-       name : req.body.nameInput
-    })
+    res.render('home')
 })
 
 app.post('/greetings', function (req, res) {
-    greetings.getNameFromInput(
-        req.body.nameInput
-    )
-    res.redirect('/')
-    console.log(req.body.nameInput)
-})
+    greetings.greetUser(req.body.nameInput)
+
+    var theName = req.body.nameInput
+    var language = req.body.selector
+
+    var greetUser = greetings.greetUser(theName, language)
+
+    res.render("home", {
+        greetDisplay: greetUser
+    })
+    console.log(greetUser)
+    
+});
+
 
 //Port setup
 const PORT = process.env.PORT || 3008;

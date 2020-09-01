@@ -55,14 +55,6 @@ describe("The GreetCounter function", function () {
     });
 });
 describe("The getAllUsers function", function () {
-    it("should return the object of all users greeted on local storage", function () {
-        var greet = GreetFactory();
-
-        greet.greetUser("joe", "zulu");
-        greet.greetUser("Kagiso", "english");
-
-        assert.deepEqual({ "joe": 0, "Kagiso": 0 }, greet.getAllUsers());
-    });
 
     it("should return one if clicked one for kagiso in english", function () {
         var greet = GreetFactory();

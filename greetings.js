@@ -1,23 +1,28 @@
 module.exports = function (stored) {
 
-    var greetedUsers = stored || {};
+    var greetedUsers = {};
 
     function greetUser(name, language) {//greting the user takes 2 parameters (name and language)
 
-        addedUser(name);
+        var regularExpression = /[^A-Za-z]/g;
+            var lettersOnly = name.replace(regularExpression, "")
+            var fixedName = lettersOnly.charAt(0).toUpperCase() + lettersOnly.slice(1).toLowerCase()
+
+        addedUser(fixedName);
+
         switch (language) {//if language
 
             case "english"://in the case of english
-                return "Hello, " + name;//return hello & name entered
+                return "Hello, " + fixedName;//return hello & name entered
 
             case "Spanish"://case of spanish
-                return "Hola, " + name;// return hola & name entered 
+                return "Hola, " + fixedName;// return hola & name entered 
 
             case "French"://case of mandrin
-                return "Bonjour , " + name;//return ni hao & name entered 
+                return "Bonjour , " + fixedName;//return ni hao & name entered 
 
             default:
-                return "Hello, " + name;
+                return "Hello, " + fixedName;
         }
     }
     function addedUser(userName) {
@@ -29,6 +34,8 @@ module.exports = function (stored) {
     function getGreetCounter() {
         return Object.keys(greetedUsers).length;//gets length of local storage object
     }
+
+    
     function getNameFromInput(textBoxValue) {
         var regularExpression = /[^A-Za-z]/g;
         if (textBoxValue !== "") {
