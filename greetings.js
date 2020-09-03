@@ -25,9 +25,9 @@ module.exports = function (stored) {
                 return "Hello, " + fixedName;
         }
     }
-    function addedUser(userName) {
-        if (greetedUsers[userName] === undefined) {
-            greetedUsers[userName] = 0;
+    function addedUser(fixedName) {
+        if (greetedUsers[fixedName] === undefined) {
+            greetedUsers[fixedName] = 0;
         }
     }
     //the counter to tell us how many users have been greeted

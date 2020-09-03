@@ -34,12 +34,13 @@ app.post('/greetings', function (req, res) {
     var language = req.body.selector
 
     var greetUser = greetings.greetUser(theName, language)
-
+    var greetCounter = greetings.getGreetCounter()
     res.render("home", {
-        greetDisplay: greetUser
+        greetDisplay: greetUser ,
+        counter : greetCounter
     })
     console.log(greetUser)
-    
+
 });
 
 
