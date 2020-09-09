@@ -68,12 +68,11 @@ app.post('/greetings', function (req, res) {
     })
     console.log(theName)
 
-
 });
 
 //Port setup
 const PORT = process.env.PORT || 3008;
 
 app.listen(PORT, function () {
-    console.log('App starting on port' + PORT);
+    console.log('App starting on port :' + PORT);
 });

@@ -4,10 +4,10 @@ let GreetFactory = require('../greetings')
 
 describe("The Greet function", function () {
     //greet in english
-    it("should greet Kagiso in English", function () {
+    it("should greet Charl in English", function () {
         var greet = GreetFactory()
         //takes 2 parameters langauge and name
-        assert.equal("Hello, Kagiso", greet.greetUser("Kagiso", "English"));
+        assert.equal("Hello, Charl", greet.greetUser("Charl", "english"));
     });
     //greet in mandrin
     it("should greet Kagiso in French", function () {
