@@ -4,6 +4,9 @@ let express = require('express');//to create web apps
 var exphbs = require('express-handlebars');//to render templates
 const bodyParser = require('body-parser');//require body parser for htm functionality
 var Greetings = require('./greetings')
+const flash = require('express-flash');
+const session = require('express-session');
+
 
 //instantiate 
 
@@ -15,6 +18,17 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 app.engine('handlebars', exphbs({ layoutsDir: './views/layouts' }));
 
+
+// initialise session middleware - flash-express depends on it
+app.use(session({
+    secret: 'my express flash string',
+    resave: false,
+    saveUninitialized: true
+}));
+
+// initialise the flash middleware
+app.use(flash());
+
 app.use(express.static('public'));//to use css
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -23,26 +37,39 @@ app.use(bodyParser.json())
 
 //Routes
 
-app.get('/', function (req, res) {
-    res.render('home')
+app.get('/',  function (req, res) {
+
+  //  const greetedNames = await greetings.getNames()
+
+    res.render('home');
 })
 
 app.post('/greetings', function (req, res) {
     greetings.greetUser(req.body.nameInput)
 
+
     var theName = req.body.nameInput
     var language = req.body.selector
 
+    if (theName === '') {
+        req.flash('error', 'please enter a name!')
+    }
+    if (language === undefined) {
+        req.flash('error', 'Please select a language')
+    }
+
     var greetUser = greetings.greetUser(theName, language)
     var greetCounter = greetings.getGreetCounter()
+
+
     res.render("home", {
-        greetDisplay: greetUser ,
-        counter : greetCounter
+        greetDisplay: greetUser,
+        counter: greetCounter
     })
-    console.log(greetUser)
+    console.log(theName)
+
 
 });
-
 
 //Port setup
 const PORT = process.env.PORT || 3008;

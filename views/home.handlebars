@@ -34,9 +34,16 @@
 
             <form action="/greet-user" method="POST">
                 <div class="greetedUsers">
-                   <p>{{greetDisplay}}</p>
+                    
+                    <p>{{greetDisplay}}</p>
                     <p>{{counter}}</p>
                 </div>
+
+
+                <div class="error">
+                 {{messages.error}}
+                </div>
+               
             </form>
 
 

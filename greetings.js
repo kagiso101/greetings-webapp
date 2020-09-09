@@ -5,8 +5,10 @@ module.exports = function (stored) {
     function greetUser(name, language) {//greting the user takes 2 parameters (name and language)
 
         var regularExpression = /[^A-Za-z]/g;
-            var lettersOnly = name.replace(regularExpression, "")
-            var fixedName = lettersOnly.charAt(0).toUpperCase() + lettersOnly.slice(1).toLowerCase()
+        var lettersOnly = name.replace(regularExpression, "")
+        var fixedName = lettersOnly.charAt(0).toUpperCase() + lettersOnly.slice(1).toLowerCase()
+
+
 
         addedUser(fixedName);
 
@@ -21,8 +23,7 @@ module.exports = function (stored) {
             case "French"://case of mandrin
                 return "Bonjour , " + fixedName;//return ni hao & name entered 
 
-            default:
-                return "Hello, " + fixedName;
+
         }
     }
     function addedUser(fixedName) {
@@ -35,7 +36,7 @@ module.exports = function (stored) {
         return Object.keys(greetedUsers).length;//gets length of local storage object
     }
 
-    
+
     function getNameFromInput(textBoxValue) {
         var regularExpression = /[^A-Za-z]/g;
         if (textBoxValue !== "") {
@@ -53,7 +54,7 @@ module.exports = function (stored) {
     }
     function resetBtn() {
         userMappedData = {};
-        
+
     }
 
     return {
@@ -64,5 +65,3 @@ module.exports = function (stored) {
         getNameFromInput
     }
 }
-
-
