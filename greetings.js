@@ -1,67 +1,60 @@
-module.exports = function (stored) {
+module.exports = function () {
 
-    var greetedUsers = {};
 
-    function greetUser(name, language) {//greting the user takes 2 parameters (name and language)
+    const pg = require("pg");
+    const Pool = pg.Pool;
+    const connectionString = process.env.DATABASE_URL || 'postgresql://kagiso:123@localhost:5432/greetings';
+    const pool = new Pool({
+        connectionString
+    });
 
+
+    async function greetUser(name, language) {
+    
+        switch (language) {
+
+            case "english":
+                return "Hello, " + name;
+            case "Spanish":
+                return "Hola, " + name;
+
+            case "French":
+                return "Bonjour , " + name;
+
+        }
+    }
+ 
+
+    async function verifyName(name) {
         var regularExpression = /[^A-Za-z]/g;
         var lettersOnly = name.replace(regularExpression, "")
         var fixedName = lettersOnly.charAt(0).toUpperCase() + lettersOnly.slice(1).toLowerCase()
 
-
-
-        addedUser(fixedName);
-
-        switch (language) {//if language
-
-            case "english"://in the case of english
-                return "Hello, " + fixedName;//return hello & name entered
-
-            case "Spanish"://case of spanish
-                return "Hola, " + fixedName;// return hola & name entered 
-
-            case "French"://case of mandrin
-                return "Bonjour , " + fixedName;//return ni hao & name entered 
-
-
+        const checking = await pool.query(`select id from greetings where name = $1`, [fixedName])
+        if (checking.rowCount === 0) {
+            await pool.query(`insert into greetings (name, greeted) values ($1, 0)`, [fixedName]);
         }
+        await pool.query(`update greetings set greeted = greeted+1 where name = $1`, [fixedName])
     }
-    function addedUser(fixedName) {
-        if (greetedUsers[fixedName] === undefined) {
-            greetedUsers[fixedName] = 0;
-        }
-    }
-    //the counter to tell us how many users have been greeted
-    function getGreetCounter() {
-        return Object.keys(greetedUsers).length;//gets length of local storage object
+
+    async function getGreetings() {
+
+        const greetings = await pool.query(`select name from greeted`);  
+        return greetings.rows;
     }
 
 
-    function getNameFromInput(textBoxValue) {
-        var regularExpression = /[^A-Za-z]/g;
-        if (textBoxValue !== "") {
-            var lettersOnly = textBoxValue.replace(regularExpression, "")
-            var name = lettersOnly.charAt(0).toUpperCase() + lettersOnly.slice(1).toLowerCase()
-            return name;
-        }
-        return "";
-    }
-
-
-    function getAllUsers() {
-        // this is for local storage
-        return greetedUsers;//no of people greeted
-    }
-    function resetBtn() {
-        userMappedData = {};
-
+    async function greetCount() {
+        const counter = await pool.query(`select count(*) as counter from greetings`)
+        return counter.rows[0].counter;
     }
 
     return {
-        greetUser,
-        getGreetCounter,
-        getAllUsers,
-        resetBtn,
-        getNameFromInput
+      
+        getGreetings,
+        verifyName,
+        greetCount,
+        greetUser
+
     }
 }

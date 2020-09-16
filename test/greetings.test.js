@@ -1,100 +1,88 @@
 let assert = require("assert");
 let GreetFactory = require('../greetings')
-
+var greetings = GreetFactory()
 
 describe("The Greet function", function () {
+
+
+    const pg = require("pg");
+    const Pool = pg.Pool;
+    const connectionString = process.env.DATABASE_URL || 'postgresql://kagiso:123@localhost:5432/greetings';
+    const pool = new Pool({
+        connectionString
+    });
+    const INSERT_QUERY = "insert into greetings (name, greeted_in) values ($1, $2)";
+
+    beforeEach(async function () {
+        await pool.query("delete from greetings");
+    });
+
+
     //greet in english
-    it("should greet Charl in English", function () {
-        var greet = GreetFactory()
-        //takes 2 parameters langauge and name
-        assert.equal("Hello, Charl", greet.greetUser("Charl", "english"));
+    it("should greet Charl in English", async function () {
+        await greetings.greetUser(name, language)
+
+        await pool.query(INSERT_QUERY, ["Charl", "English"]);
+
+        const results = await pool.query("select count(*) from greetings");
+
+        assert.equal(1, results.rows[0].count);
+
     });
     //greet in mandrin
-    it("should greet Kagiso in French", function () {
-        var greet = GreetFactory()
+    it("should greet Kagiso in French", async function () {
 
-        assert.equal("Bonjour , Kagiso", greet.greetUser("Kagiso", "French"));
+        await pool.query(INSERT_QUERY, ["kagiso", "French"])
+
+        const results = await pool.query("select count(*) from greetings");
+
+        assert.equal(1, results.rows[0].count)
     });
     //greet in spanish
-    it("should greet Kagiso in Spanish", function () {
-        var greet = GreetFactory()
+    it("should greet Sphiwe in Spanish", async function () {
 
-        assert.equal("Hola, Kagiso", greet.greetUser("Kagiso", "Spanish"));
+        await pool.query(INSERT_QUERY, ["kagiso", "Spanish"])
+
+        const results = await pool.query("select count(*) from greetings");
+
+        assert.equal(1, results.rows[0].count)
     });
-});
-describe("The GreetCounter function", function () {
-    it("should return the total number of users greeted starting from 0", function () {
-        var greet = GreetFactory();
-        //counter should be 0 since no name is greeted
-        assert.equal(0, greet.getGreetCounter());
+    it("should be able to find all names greeted ", async function () {
+
+        await pool.query(INSERT_QUERY, ["Charl", "English"]);
+        await pool.query(INSERT_QUERY, ["Kagiso", "French"]);
+        await pool.query(INSERT_QUERY, ["Sphiwe", "Spanish"]);
+
+        const results = await pool.query("select count(*) from greetings");
+
+        assert.equal(3, results.rows[0].count);
+
     });
-    it("should return the total number of users greeted in English", function () {
-        var greet = GreetFactory();
+    it("should be able to find the user greeted ", async function () {
 
-        greet.greetUser("Josh", "English")//takes 2 parameters name and language
-        greet.greetUser("Kagiso", "English")
+        await pool.query(INSERT_QUERY, ["Kagiso", "French"]);
 
-        assert.equal(2, greet.getGreetCounter());//how many times the greetUser function occoured
-    });
-    it("should return the total number of users greeted in Spanish", function () {
-        var greet = GreetFactory();
+        const results = await pool.query("select * from greetings where name = $1", ["Kagiso"]);
 
-        greet.greetUser("Joe", "Spanish")
-        greet.greetUser("Kagiso", "Spanish")
-        greet.greetUser("Josh", "Spanish")
-        greet.greetUser("Jill", "Spanish")
+        assert.equal("Kagiso", results.rows[0].name);
+        assert.equal("French", results.rows[0].greeted_in);
 
-        assert.equal(4, greet.getGreetCounter());
-    });
-    it("should return the total number of users greeted in French", function () {
-        var greet = GreetFactory();
-
-        greet.greetUser("Joe", "French")
-
-        assert.equal(1, greet.getGreetCounter());
-    });
-});
-describe("The getAllUsers function", function () {
-
-    it("should return one if clicked one for kagiso in english", function () {
-        var greet = GreetFactory();
-
-        greet.greetUser("Kagiso", "english")
-
-        assert.equal(1, greet.getGreetCounter());
     });
 
-    it("should return one if clicked one for Max in French", function () {
-        var greet = GreetFactory();
+    it("should be able to find the language the user is greeted in", async function () {
 
-        greet.greetUser("Max", "French")
+        await pool.query(INSERT_QUERY, ["Kagiso", "French"]);
 
-        assert.equal(1, greet.getGreetCounter());
+        const results = await pool.query("select * from greetings where greeted_in = $1", ["French"]);
+
+        assert.equal("Kagiso", results.rows[0].name);
+        assert.equal("French", results.rows[0].greeted_in);
+
     });
-});
-describe("The getNameFromInput function", function () {
-    it("should return a name without special characters", function () {
-        var greet = GreetFactory()
-        //uses  reguar expression to remove numbers from string
-        assert.equal("Kagiso", greet.getNameFromInput("k655a6#$^()456g64i53s35o6"));
-        assert.equal("Sean", greet.getNameFromInput("s453e8!@#$%^&*(67a754n86475"));
 
-        assert.equal("", greet.getNameFromInput(""));
-    });
-    it("should return a name without number characters", function () {
-        var greet = GreetFactory()
-        //uses  reguar expression to remove numbers from string
-        assert.equal("Kagiso", greet.getNameFromInput("k655a6456g64i53s35o6"));
-        assert.equal("Sean", greet.getNameFromInput("s453e867a754n86475"));
 
-        assert.equal("", greet.getNameFromInput(""));
-    });
-    it("should return a name without numbers or special characters", function () {
-        var greet = GreetFactory()
-        //uses  reguar expression to remove numbers from string
-        assert.equal("Kagiso", greet.getNameFromInput("k655a645@#$%^6g64i53s35o6"));
-        assert.equal("Sean", greet.getNameFromInput("s453e867a75@#$%^&*4n86475"));
+    after(function () {
+        pool.end();
+    })
 
-        assert.equal("", greet.getNameFromInput(""));
-    });
 });

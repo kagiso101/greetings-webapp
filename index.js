@@ -44,30 +44,29 @@ app.get('/',  function (req, res) {
     res.render('home');
 })
 
-app.post('/greetings', function (req, res) {
-    greetings.greetUser(req.body.nameInput)
-
+app.post('/greetings', async function (req, res) {
 
     var theName = req.body.nameInput
     var language = req.body.selector
 
-    if (theName === '') {
+    if (theName === '' && language === undefined) {
+        req.flash('error', 'please enter a name & select a language!')
+    }
+    else if (theName === '') {
         req.flash('error', 'please enter a name!')
     }
-    if (language === undefined) {
+    else if (language === undefined) {
         req.flash('error', 'Please select a language')
     }
 
-    var greetUser = greetings.greetUser(theName, language)
-    var greetCounter = greetings.getGreetCounter()
-
+    var greetUser = await greetings.greetUser(theName, language)
+    await greetings.verifyName(theName)
+    var greetCounter = await greetings.greetCount()
 
     res.render("home", {
         greetDisplay: greetUser,
-        counter: greetCounter
+        counter:  greetCounter
     })
-    console.log(theName)
-
 });
 
 //Port setup

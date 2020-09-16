@@ -53,4 +53,17 @@
 
         </div>
     </form>
+
+    <table class="table table-striped">
+			<tbody>
+				{{#each greetings}}
+				<tr>
+					<th scope="row">{{id}}</th>
+					<td>{{name}}</td>
+					<td>{{greeted}}</td>
+				</tr>
+				{{/each}}
+				
+			</tbody>
+		</table>
 </div>
