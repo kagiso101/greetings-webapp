@@ -37,9 +37,9 @@ app.use(bodyParser.json())
 
 //Routes
 
-app.get('/',  function (req, res) {
+app.get('/', function (req, res) {
 
-  //  const greetedNames = await greetings.getNames()
+    //  const greetedNames = await greetings.getNames()
 
     res.render('home');
 })
@@ -65,9 +65,30 @@ app.post('/greetings', async function (req, res) {
 
     res.render("home", {
         greetDisplay: greetUser,
-        counter:  greetCounter
+        counter: greetCounter
     })
 });
+
+app.get('/greeted', async function (req, res) {
+    const users = greetings.allUsers()
+    res.render('greeted', {
+        allUsers: await users
+    })
+})
+
+app.get('/counter/:user', async function (req, res) {
+    var user = req.params.user
+    var times = await greetings.perPerson(user)
+    res.render('times', {
+        name: user,
+        counter: times
+    })
+});
+
+app.get('/reset', async function (req, res) {
+    const reset = greetings.reset()
+    res.render('home')
+})
 
 //Port setup
 const PORT = process.env.PORT || 3008;

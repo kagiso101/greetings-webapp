@@ -32,14 +32,13 @@
         top: 0;
         left: 0;
         height: 40px;
-        width: 50px;
+        width: auto;
     }
     input {
         border-radius: 2em;
         background: white;
-        
     }
-    .inputElements{
+    .inputElements {
         height: 100px;
         width: 100px;
     }
@@ -58,5 +57,12 @@
     }
     .error {
         color: red;
+    }
+    a {
+        color: black;
+    }
+    .times {
+        text-align: center;
+        padding-top: 3em;
     }
 }

@@ -10,7 +10,7 @@ module.exports = function () {
 
 
     async function greetUser(name, language) {
-    
+
         switch (language) {
 
             case "english":
@@ -23,8 +23,9 @@ module.exports = function () {
 
         }
     }
- 
 
+
+    //adds to db
     async function verifyName(name) {
         var regularExpression = /[^A-Za-z]/g;
         var lettersOnly = name.replace(regularExpression, "")
@@ -37,24 +38,37 @@ module.exports = function () {
         await pool.query(`update greetings set greeted = greeted+1 where name = $1`, [fixedName])
     }
 
-    async function getGreetings() {
-
-        const greetings = await pool.query(`select name from greeted`);  
-        return greetings.rows;
-    }
-
-
+    //gets counter for all greeted users
     async function greetCount() {
         const counter = await pool.query(`select count(*) as counter from greetings`)
         return counter.rows[0].counter;
     }
 
+    async function perPerson(name) {
+        const counter = await pool.query(`select greeted from greetings where name = $1`, [name])
+        return counter.rows[0].greeted;
+    }
+
+    //all names
+    async function allUsers() {
+        const greetings = await pool.query(`select name from greetings`);
+        return greetings.rows;
+    }
+
+    async function reset() {
+        const greetings = await pool.query(`delete from greetings`);
+        return greetings.rows;
+    }
+
     return {
-      
-        getGreetings,
+
+        allUsers,
         verifyName,
         greetCount,
-        greetUser
+        verifyName,
+        greetUser,
+        perPerson,
+        reset
 
     }
 }

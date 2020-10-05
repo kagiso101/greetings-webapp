@@ -5,15 +5,10 @@
 
     <!--form -->
     <form action="/greetings" method="POST">
-
         <div class="number2">
-
             <input type="text" name="nameInput" id="inputElements" placeholder="Enter your name"
                 value="{{textBoxValue.nameInput}}">
-
             <div class="number3">
-
-
                 <label>
                     <input type="radio" name="selector" value="english">English
                 </label>
@@ -23,38 +18,25 @@
                 <label>
                     <input type="radio" name="selector" value="Spanish">Spanish
                 </label>
-
-
-            </div>
+            </div class='button'>
             <button id="greetButton" type="submit">greet</button>
-
         </div>
-
         <div class="number4">
-
-            <form action="/greet-user" method="POST">
-                <div class="greetedUsers">
-                    
-                    <p>{{greetDisplay}}</p>
-                    <p>{{counter}}</p>
-                </div>
-
-
-                <div class="error">
-                 {{messages.error}}
-                </div>
-               
-            </form>
-
-
+            <div class="greetedUsers">
+                <p>{{greetDisplay}}</p>
+                <p>{{counter}}</p>
+            </div>
+            <div class="error">
+                {{messages.error}}
+            </div>
             <h1 id="txtBox"></h1>
-
-            <button id="resetButton">reset</button>
-
+            <button id="resetButton"><a href="/reset">reset</a></button>
+            <button id='greetedUsers' type="button"><a href="/greeted">Greeted</a></button>
         </div>
     </form>
 
-    <table class="table table-striped">
+
+    {{!-- <table class="table table-striped">
 			<tbody>
 				{{#each greetings}}
 				<tr>
@@ -65,5 +47,5 @@
 				{{/each}}
 				
 			</tbody>
-		</table>
+		</table> --}}
 </div>

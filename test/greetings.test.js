@@ -1,6 +1,8 @@
 let assert = require("assert");
-let GreetFactory = require('../greetings')
-var greetings = GreetFactory()
+let Greetings = require('../greetings')
+var greetings = Greetings()
+
+
 
 describe("The Greet function", function () {
 
@@ -11,76 +13,77 @@ describe("The Greet function", function () {
     const pool = new Pool({
         connectionString
     });
-    const INSERT_QUERY = "insert into greetings (name, greeted_in) values ($1, $2)";
+
+
+    const INSERT_QUERY = "insert into greetings (name, greeted) values ($1, $2)";
 
     beforeEach(async function () {
         await pool.query("delete from greetings");
     });
 
 
-    //greet in english
-    it("should greet Charl in English", async function () {
-        await greetings.greetUser(name, language)
+    it("should be able to greet kagiso once", async function () {
 
-        await pool.query(INSERT_QUERY, ["Charl", "English"]);
 
-        const results = await pool.query("select count(*) from greetings");
-
+        const name = "kagiso";
+        const counter = 1;
+        await greetings.greetUser(name, counter)
+        await pool.query(INSERT_QUERY, ["kagiso", 1]);
+        const results = await pool.query(`select count( * ) from greetings `);
         assert.equal(1, results.rows[0].count);
-
     });
-    //greet in mandrin
-    it("should greet Kagiso in French", async function () {
 
-        await pool.query(INSERT_QUERY, ["kagiso", "French"])
-
-        const results = await pool.query("select count(*) from greetings");
-
-        assert.equal(1, results.rows[0].count)
-    });
-    //greet in spanish
-    it("should greet Sphiwe in Spanish", async function () {
-
-        await pool.query(INSERT_QUERY, ["kagiso", "Spanish"])
-
-        const results = await pool.query("select count(*) from greetings");
-
-        assert.equal(1, results.rows[0].count)
-    });
-    it("should be able to find all names greeted ", async function () {
-
-        await pool.query(INSERT_QUERY, ["Charl", "English"]);
-        await pool.query(INSERT_QUERY, ["Kagiso", "French"]);
-        await pool.query(INSERT_QUERY, ["Sphiwe", "Spanish"]);
-
-        const results = await pool.query("select count(*) from greetings");
-
+    it("should be able to greet kagiso multiple times", async function () {
+        const name = "kagiso";
+        const counter = 0;
+        await greetings.greetUser(name, counter)
+        await pool.query(INSERT_QUERY, ["kagiso", 1]);
+        await pool.query(INSERT_QUERY, ["kagiso", 2]);
+        await pool.query(INSERT_QUERY, ["kagiso", 3]);
+        const results = await pool.query(`select count( * ) from greetings `);
         assert.equal(3, results.rows[0].count);
-
-    });
-    it("should be able to find the user greeted ", async function () {
-
-        await pool.query(INSERT_QUERY, ["Kagiso", "French"]);
-
-        const results = await pool.query("select * from greetings where name = $1", ["Kagiso"]);
-
-        assert.equal("Kagiso", results.rows[0].name);
-        assert.equal("French", results.rows[0].greeted_in);
-
     });
 
-    it("should be able to find the language the user is greeted in", async function () {
-
-        await pool.query(INSERT_QUERY, ["Kagiso", "French"]);
-
-        const results = await pool.query("select * from greetings where greeted_in = $1", ["French"]);
-
-        assert.equal("Kagiso", results.rows[0].name);
-        assert.equal("French", results.rows[0].greeted_in);
-
+    it("should be able to find a name", async function () {
+        const name = "kagiso";
+        const counter = 0;
+        await greetings.greetUser(name, counter)
+        await pool.query(INSERT_QUERY, ["kagiso", 0]);
+        const results = await pool.query(`select * from greetings where name = $1`, ["kagiso"]);
+        assert.equal("kagiso", results.rows[0].name);
     });
 
 
+    it("Should be able to reset the database table", async function () {
+        const reset = await pool.query("delete from greetings")
+        assert.equal(rows[0]);
+    })
+
+    it("should be able to count", async function () {
+        const name = "kagiso";
+        const counter = 0;
+        await pool.query(INSERT_QUERY, ["kagiso", 3]);
+        const results = await pool.query("select * from greetings where name = $1", ["kagiso"]);
+        assert.equal("kagiso", results.rows[0].name);
+        assert.equal(3, results.rows[0].counter);
+    });
+
+    it("should be able to update a counter", async function () {
+        const name = "kagiso";
+        const counter = 7;
+        await greetings.greetCount(name)
+        await pool.query(INSERT_QUERY, ["kagiso", 7]);
+        let results = await pool.query("select * from greetings where name = $1", ["kagiso"]);
+        //checking initial values
+        assert.equal("kagiso", results.rows[0].name);
+        assert.equal(7, results.rows[0].counter);
+        //updating to new values
+        await pool.query("update greetings set greetings = $2  where name = $1", ["kagiso", 5]);
+        results = await pool.query("select * from greetings where name = $1", ["kagiso"]);
+        //new values should have been found
+        assert.equal("kagiso", results.rows[0].name);
+        assert.equal(5, results.rows[0].counter);
+    });
     after(function () {
         pool.end();
     })

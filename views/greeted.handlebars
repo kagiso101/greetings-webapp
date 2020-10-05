@@ -1,0 +1,17 @@
+<div class="number1">
+<form action="/greeted" method="GET">
+
+    <h1>Names Greeted</h1>
+    <div class="greetedUsers">
+
+        
+        {{#each allUsers}}
+        <a href='/counter/{{this.name}}'><p>{{this.name}}</p></a>
+        {{/each}}
+        
+
+</form>
+        <button id='back' type="button"><a href="/">Back</a></button>
+    </div>
+
+</div>
