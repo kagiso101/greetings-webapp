@@ -7,9 +7,11 @@ module.exports = function () {
     const pool = new Pool({
         connectionString
     });
-
-
+    
     async function greetUser(name, language) {
+        if (language === undefined) {
+            return ""
+        }
         switch (language) {
 
             case "english":
@@ -29,13 +31,13 @@ module.exports = function () {
         var regularExpression = /[^A-Za-z]/g;
         var lettersOnly = name.replace(regularExpression, "")
         var fixedName = lettersOnly.charAt(0).toUpperCase() + lettersOnly.slice(1).toLowerCase()
-        if (fixedName !== "") {
+
+        
             const checking = await pool.query(`select id from greetings where name = $1`, [fixedName])
             if (checking.rowCount === 0) {
                 await pool.query(`insert into greetings (name, greeted) values ($1, 0)`, [fixedName]);
             }
             await pool.query(`update greetings set greeted = greeted+1 where name = $1`, [fixedName])
-        }
     }
     //gets counter for all greeted users
     async function greetCount() {
