@@ -3,9 +3,7 @@ module.exports = function (pool) {
 
 
      function greetUser(name, language) {
-        if (language === undefined && name === "") {
-            return ""
-        }
+
         switch (language) {
 
             case "english":

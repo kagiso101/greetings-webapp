@@ -19,21 +19,13 @@ describe("The Greet function", function () {
 
     describe("The getNames function", function () {
 
-
+ 
         const INSERT_QUERY = "insert into greetings (name, greeted) values ($1, $2)";
 
         beforeEach(async function () {
             await pool.query(`delete from greetings`);
         });
 
-
-        it("should greet Kagiso in English",  function () {
-
-            var name = "Kagiso"
-            var lang = "english"
-
-            assert.deepEqual("Hello, Kagiso", greetings.greetUser(name, lang));
-        });
 
         it("should be able to add name to the database", async function () {
 
@@ -88,6 +80,8 @@ describe("The Greet function", function () {
 
         it("should be able to reset the dataBase", async function () {
 
+            await greetings.verifyName('siya')
+            await greetings.verifyName('Ayanda')
 
             const allUsers = await greetings.allUsers()
 
