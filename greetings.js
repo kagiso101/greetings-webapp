@@ -2,10 +2,8 @@ module.exports = function (pool) {
 
 
 
-    async function greetUser(name, language) {
-        if (language === undefined && name === "") {
-            return ""
-        }
+     function greetUser(name, language) {
+
         switch (language) {
 
             case "english":

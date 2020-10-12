@@ -39,7 +39,7 @@ describe("The Greet function", function () {
 
         it("should be able to add multiple times to the database", async function () {
 
-            const name2 = "sphiwe";name4
+            const name2 = "sphiwe";
             const name3 = "teko";
             const name4 = "charl";
 
