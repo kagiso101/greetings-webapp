@@ -1,6 +1,5 @@
 let assert = require("assert");
 let Greetings = require('../greetings')
-var greetings = Greetings()
 
 
 
@@ -15,6 +14,9 @@ describe("The Greet function", function () {
     });
 
 
+    var greetings = Greetings(pool)
+
+
     describe("The getNames function", function () {
 
  
@@ -27,64 +29,65 @@ describe("The Greet function", function () {
 
         it("should be able to add name to the database", async function () {
 
-            var name = 'Kagiso'
+            var name = "Kagiso"
 
             await greetings.verifyName(name)
-           
+            const allUsers = await greetings.allUsers()
 
-            const results = await pool.query(`select count( * ) from greetings `);
-            assert.deepEqual([{count: 1}], results.rows);
+            assert.deepEqual([{ name: "Kagiso" }], allUsers);
         });
 
         it("should be able to add multiple times to the database", async function () {
 
-            const name2 = "sphiwe";
+            const name2 = "sphiwe";name4
             const name3 = "teko";
             const name4 = "charl";
-        
+
             await greetings.verifyName(name2)
             await greetings.verifyName(name3)
             await greetings.verifyName(name4)
-            var allUsers = await greetings.allUsers()
+            const allUsers = await greetings.allUsers()
 
-            const results = await pool.query(`select count( * ) from greetings `);
             assert.deepEqual([{ name: 'sphiwe' }], [{ name: 'sphiwe' }], [{ name: 'teko' }], [{ name: 'charl' }], allUsers);
         });
 
-        it("should be able to find a name", async function () {
-            const name = "kagiso";
-            const counter = 0;
-            await greetings.greetUser(name, counter)
-            await pool.query(INSERT_QUERY, ["kagiso", 0]);
-            const results = await pool.query(`select * from greetings where name = $1`, ["kagiso"]);
-            assert.equal("kagiso", results.rows[0].name);
+        it("should be able to find counter for times a person was greeted ", async function () {
+
+            var name = "Kagiso"
+
+            await greetings.verifyName(name)
+
+
+            assert.deepEqual(1, await greetings.perPerson(name));
         });
 
-        it("should be able to count", async function () {
-            const name = "kagiso";
-            const counter = 0;
-            await pool.query(INSERT_QUERY, ["kagiso", 3]);
-            const results = await pool.query("select * from greetings where name = $1", ["kagiso"]);
-            assert.equal("kagiso", results.rows[0].name);
-            assert.equal(3, results.rows[0].greeted);
+        it("should be able to get counter for all greeted users", async function () {
+
+            const name2 = "sphiwe";
+            const name3 = "teko";
+            const name4 = "charl";
+            const name5 = "Mecayle";
+
+            await greetings.verifyName(name5)
+            await greetings.verifyName(name2)
+            await greetings.verifyName(name3)
+            await greetings.verifyName(name4)
+
+            const allUsers = await greetings.allUsers()
+
+            assert.deepEqual(4, await greetings.greetCount());
         });
 
-        it("should be able to update a counter", async function () {
-            const name = "kagiso";
-            const counter = 7;
-            await greetings.greetCount(name)
-            await pool.query(INSERT_QUERY, ["kagiso", 7]);
-            let results = await pool.query("select * from greetings where name = $1", ["kagiso"]);
-            //checking initial values
-            assert.equal("kagiso", results.rows[0].name);
-            assert.equal(7, results.rows[0].greeted);
-            //updating to new values
-            await pool.query("update greetings set greeted = $2  where name = $1", ["kagiso", 5]);
-            results = await pool.query("select * from greetings where name = $1", ["kagiso"]);
-            //new values should have been found
-            assert.equal("kagiso", results.rows[0].name);
-            assert.equal(5, results.rows[0].greeted);
+        it("should be able to reset the dataBase", async function () {
+
+            await greetings.verifyName('siya')
+            await greetings.verifyName('Ayanda')
+
+            const allUsers = await greetings.allUsers()
+
+            assert.deepEqual([], await greetings.reset());
         });
+
         after(function () {
             pool.end();
         })
