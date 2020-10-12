@@ -33,7 +33,7 @@ describe("The Greet function", function () {
            
 
             const results = await pool.query(`select count( * ) from greetings `);
-            assert.deepEqual([{count: 0}], results.rows);
+            assert.deepEqual([{count: 1}], results.rows);
         });
 
         it("should be able to add multiple times to the database", async function () {
