@@ -1,13 +1,14 @@
 module.exports = function () {
 
+   
+const pg = require("pg");
+const Pool = pg.Pool;
+const connectionString = process.env.DATABASE_URL || 'postgresql://kagiso:123@localhost:5432/greetings';
+const pool = new Pool({
+    connectionString
+});
 
-    const pg = require("pg");
-    const Pool = pg.Pool;
-    const connectionString = process.env.DATABASE_URL || 'postgresql://kagiso:123@localhost:5432/greetings';
-    const pool = new Pool({
-        connectionString
-    });
-    
+
     async function greetUser(name, language) {
         if (language === undefined) {
             return ""
