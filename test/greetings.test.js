@@ -17,11 +17,11 @@ describe("The Greet function", function () {
 
     describe("The getNames function", function () {
 
-
+ 
         const INSERT_QUERY = "insert into greetings (name, greeted) values ($1, $2)";
 
         beforeEach(async function () {
-            await pool.query("delete from greetings");
+            await pool.query(`delete from greetings`);
         });
 
 
@@ -30,10 +30,10 @@ describe("The Greet function", function () {
             var name = 'Kagiso'
 
             await greetings.verifyName(name)
-            var allUsers = await greetings.allUsers()
+           
 
             const results = await pool.query(`select count( * ) from greetings `);
-            assert.deepEqual([{ name: 'Kagiso' }], allUsers);
+            assert.deepEqual([{count: 0}], results.rows);
         });
 
         it("should be able to add multiple times to the database", async function () {
