@@ -9,42 +9,46 @@ describe("The Greet function", function () {
 
     const pg = require("pg");
     const Pool = pg.Pool;
-    const connectionString = process.env.DATABASE_URL || 'postgresql://kagiso:123@localhost:5432/greetings';
+    const connectionString = process.env.DATABASE_URL || 'postgresql://kagiso:123@localhost:5432/greetings2';
     const pool = new Pool({
         connectionString
     });
 
 
     describe("The getNames function", function () {
-  
 
+ 
         const INSERT_QUERY = "insert into greetings (name, greeted) values ($1, $2)";
 
         beforeEach(async function () {
-            await pool.query("delete from greetings");
+            await pool.query(`delete from greetings`);
         });
 
 
-        it("should be able to greet kagiso once", async function () {
+        it("should be able to add name to the database", async function () {
 
+            var name = 'Kagiso'
 
-            const name = "kagiso";
-            const counter = 1;
-            await greetings.greetUser(name, counter)
-            await pool.query(INSERT_QUERY, ["kagiso", 1]);
+            await greetings.verifyName(name)
+           
+
             const results = await pool.query(`select count( * ) from greetings `);
-            assert.equal(1, results.rows[0].count);
+            assert.deepEqual([{count: 0}], results.rows);
         });
 
-        it("should be able to greet kagiso multiple times", async function () {
-            const name = "kagiso";
-            const counter = 0;
-            await greetings.greetUser(name, counter)
-            await pool.query(INSERT_QUERY, ["kagiso", 1]);
-            await pool.query(INSERT_QUERY, ["kagiso", 2]);
-            await pool.query(INSERT_QUERY, ["kagiso", 3]);
+        it("should be able to add multiple times to the database", async function () {
+
+            const name2 = "sphiwe";
+            const name3 = "teko";
+            const name4 = "charl";
+        
+            await greetings.verifyName(name2)
+            await greetings.verifyName(name3)
+            await greetings.verifyName(name4)
+            var allUsers = await greetings.allUsers()
+
             const results = await pool.query(`select count( * ) from greetings `);
-            assert.equal(3, results.rows[0].count);
+            assert.deepEqual([{ name: 'sphiwe' }], [{ name: 'sphiwe' }], [{ name: 'teko' }], [{ name: 'charl' }], allUsers);
         });
 
         it("should be able to find a name", async function () {
@@ -55,12 +59,6 @@ describe("The Greet function", function () {
             const results = await pool.query(`select * from greetings where name = $1`, ["kagiso"]);
             assert.equal("kagiso", results.rows[0].name);
         });
-
-
-        // it("Should be able to reset the database table", async function () {
-        //     const reset = await pool.query("delete from greetings")
-        //     assert.equal(rows[0]);
-        // })
 
         it("should be able to count", async function () {
             const name = "kagiso";
