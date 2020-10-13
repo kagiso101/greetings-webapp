@@ -23,7 +23,7 @@ module.exports = function (pool) {
 
     //adds to db
     async function verifyName(name) {
-        var language = ""
+      
         if (!name == "" ) {
             var regularExpression = /[^A-Za-z]/g;
             var lettersOnly = name.replace(regularExpression, "")
