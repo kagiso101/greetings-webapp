@@ -55,10 +55,12 @@ describe("The Greet function", function () {
 
             var name = "Kagiso"
 
+
             await greetings.verifyName(name)
 
+            await greetings.verifyName(name)
 
-            assert.deepEqual(1, await greetings.perPerson(name));
+            assert.deepEqual(2, await greetings.perPerson(name));
         });
 
         it("should be able to get counter for all greeted users", async function () {

@@ -22,10 +22,13 @@ module.exports = function greetingsRoutes(greetings) {
             else if (language === undefined) {
                 req.flash('error', 'Please select a language')
             }
+            else{
+                await greetings.verifyName(theName)
+                var greetCounter = await greetings.greetCount()
+            }
 
             var greetUser = await greetings.greetUser(theName, language)
-            await greetings.verifyName(theName)
-            var greetCounter = await greetings.greetCount()
+            
 
             res.render("home", {
                 greetDisplay: greetUser,

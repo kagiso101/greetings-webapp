@@ -3,23 +3,28 @@ module.exports = function (pool) {
 
 
     function greetUser(name, language) {
-      
+
+        var regularExpression = /[^A-Za-z]/g;
+        var lettersOnly = name.replace(regularExpression, "")
+        var fixedName = lettersOnly.charAt(0).toUpperCase() + lettersOnly.slice(1).toLowerCase()
+
             switch (language) {
 
                 case "english":
-                    return "Hello, " + name;
+                    return "Hello, " + fixedName;
                 case "Spanish":
-                    return "Hola, " + name;
+                    return "Hola, " + fixedName;
 
                 case "French":
-                    return "Bonjour , " + name;
+                    return "Bonjour , " + fixedName;
         }
     }
 
 
     //adds to db
     async function verifyName(name) {
-        if (!name == "") {
+        var language = ""
+        if (!name == "" ) {
             var regularExpression = /[^A-Za-z]/g;
             var lettersOnly = name.replace(regularExpression, "")
             var fixedName = lettersOnly.charAt(0).toUpperCase() + lettersOnly.slice(1).toLowerCase()
