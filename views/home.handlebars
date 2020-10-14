@@ -6,6 +6,11 @@
     <!--form -->
     <form action="/greetings" method="POST">
         <div class="number2">
+            {{#if messages.error}}
+            <div class="error">
+                {{messages.error}}
+            </div>
+            {{/if}}
             <input type="text" name="nameInput" id="inputElements" placeholder="Enter your name"
                 value="{{textBoxValue.nameInput}}">
             <div class="number3">
@@ -26,9 +31,6 @@
                 <p>{{greetDisplay}}</p>
                 <p>{{counter}}</p>
             </div>
-            <div class="error">
-                {{messages.error}}
-            </div>
             <h1 id="txtBox"></h1>
             <a href="/greeted">Greeted</a></button>
             <br>
@@ -36,17 +38,9 @@
         </div>
     </form>
 
-
-    {{!-- <table class="table table-striped">
-			<tbody>
-				{{#each greetings}}
-				<tr>
-					<th scope="row">{{id}}</th>
-					<td>{{name}}</td>
-					<td>{{greeted}}</td>
-				</tr>
-				{{/each}}
-				
-			</tbody>
-		</table> --}}
 </div>
+<script>
+    setTimeout(function () {
+        document.querySelector(".error").innerHTML = ""
+    }, 2000)
+</script>

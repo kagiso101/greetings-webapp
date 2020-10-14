@@ -38,8 +38,8 @@ module.exports = function (pool) {
     }
     //gets counter for all greeted users
     async function greetCount() {
-        const counter = await pool.query(`select count(*) as counter from greetings`)
-        return counter.rows[0].counter;
+        const counter = await pool.query(`select name from greetings`)
+        return counter.rowCount;
     }
     //counter per person
     async function perPerson(name) {
@@ -55,7 +55,7 @@ module.exports = function (pool) {
     //resets db
     async function reset() {
         const greetings = await pool.query(`delete from greetings`);
-        return greetings.rows;
+   
     }
 
     return {

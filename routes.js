@@ -2,7 +2,10 @@ module.exports = function greetingsRoutes(greetings) {
 
     async function home(req, res, next) {
         try {
-            res.render('home');
+            var greetCounter = await greetings.greetCount()
+            res.render('home', {
+                counter: greetCounter
+            });
         } catch (err) {
             next(err)
         }
@@ -12,23 +15,26 @@ module.exports = function greetingsRoutes(greetings) {
         var theName = req.body.nameInput
         var language = req.body.selector
 
+        var greetCounter = await greetings.greetCount()
         try {
+
             if (theName === '' && language === undefined) {
                 req.flash('error', 'please enter a name & select a language!')
+                greetCounter
             }
             else if (theName === '') {
                 req.flash('error', 'please enter a name!')
+                greetCounter
             }
             else if (language === undefined) {
                 req.flash('error', 'Please select a language')
+                greetCounter
             }
-            else{
+            else {
                 await greetings.verifyName(theName)
+                var greetUser = await greetings.greetUser(theName, language)
                 var greetCounter = await greetings.greetCount()
             }
-
-            var greetUser = await greetings.greetUser(theName, language)
-            
 
             res.render("home", {
                 greetDisplay: greetUser,
@@ -45,7 +51,7 @@ module.exports = function greetingsRoutes(greetings) {
         try {
             const users = await greetings.allUsers()
             res.render('greeted', {
-                allUsers:  users
+                allUsers: users
             })
         } catch (err) {
             next(err)
@@ -68,11 +74,14 @@ module.exports = function greetingsRoutes(greetings) {
     }
 
 
-    
+
     async function reset(req, res, next) {
         try {
-            const reset = greetings.reset()
-            res.render('home')
+            await greetings.reset()
+            var greetCounter = await greetings.greetCount()
+            res.render('home', {
+                counter: greetCounter
+            })
         } catch (err) {
             next(err)
         }
